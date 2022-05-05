@@ -1,0 +1,16 @@
+version: '1.0.0'
+services:
+  go-api:
+    build: ./go-api
+    environment:
+      # prod = production, dev = development
+      - GO_ENV=prod
+      - PORT=4001:4001
+  apollo-gateway:
+    build: ./apollo-gateway
+    # Wait for go-api to start first
+    depends_on:
+      - go-api
+    environment:
+      # prod = production, dev = development
+      - NODE_ENV=prod
