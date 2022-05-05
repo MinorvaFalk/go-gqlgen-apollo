@@ -44,7 +44,7 @@ func (h *GraphqlHandler) Query() *handler.Server {
 	})
 
 	// enable introspection if enviroment is development
-	if os.Getenv("ENV") == "dev" {
+	if os.Getenv("GO_ENV") == "dev" {
 		srv.Use(extension.Introspection{})
 	}
 

@@ -27,7 +27,7 @@ func main() {
 	m := http.NewServeMux()
 
 	// Enable playground route in development
-	if os.Getenv("ENV") == "dev" {
+	if os.Getenv("GO_ENV") == "dev" {
 		m.Handle("/", gh.Playground())
 	}
 
