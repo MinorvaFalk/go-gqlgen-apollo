@@ -1,13 +1,13 @@
 {
   "name": "apollo-gateway",
   "version": "1.0.0",
-  "description": "",
+  "description": "Apollo Gateway for Go graphql API",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Apollo Graphql", "Graphql"],
+  "author": "MinorvaFalk",
   "license": "ISC",
   "dependencies": {
     "@apollo/gateway": "^2.0.2",

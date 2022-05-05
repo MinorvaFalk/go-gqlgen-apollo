@@ -18,6 +18,7 @@ Steps :
 ># Make sure to add .env with API-Key and Graph-Ref
 ># Check ./apollo-gateway/.env-example for >example
 >$ cd apollo-gateway
+>$ npm install
 >$ node index.js
 >
 ># Second terminal
