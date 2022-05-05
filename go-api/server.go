@@ -1,14 +1,15 @@
 package main
 
 import (
-	"go-gqlgen/graph"
-	"go-gqlgen/graph/generated"
+	"context"
+	"errors"
+	"go-gqlgen/handler"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
+	"os/signal"
+	"syscall"
+	"time"
 )
 
 const defaultPort = "4001"
@@ -19,11 +20,41 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	// Define graphql handlers
+	gh := handler.NewGraphqlHandler()
 
-	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-	http.Handle("/query", srv)
+	// Define servemux
+	m := http.NewServeMux()
 
-	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-	log.Fatal(http.ListenAndServe(":"+port, nil))
+	// Enable playground route in development
+	if os.Getenv("ENV") == "dev" {
+		m.Handle("/", gh.Playground())
+	}
+
+	m.Handle("/query", gh.Query())
+
+	// Define http server
+	s := &http.Server{
+		Addr:    ":" + port,
+		Handler: m,
+	}
+
+	go func() {
+		log.Println("🚀 Server is running on port", s.Addr)
+		if err := s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatal(err)
+		}
+
+	}()
+
+	sigChan := make(chan os.Signal)
+	defer close(sigChan)
+	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+
+	log.Println("Shutting down server...", <-sigChan)
+
+	tc, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	s.Shutdown(tc)
 }
