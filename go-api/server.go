@@ -47,9 +47,8 @@ func main() {
 
 	}()
 
-	sigChan := make(chan os.Signal)
-	defer close(sigChan)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+	sigChan, closeChan := createChannel()
+	defer closeChan()
 
 	log.Println("Shutting down server...", <-sigChan)
 
@@ -57,4 +56,13 @@ func main() {
 	defer cancel()
 
 	s.Shutdown(tc)
+}
+
+func createChannel() (chan os.Signal, func()) {
+	stopCh := make(chan os.Signal, 1)
+	signal.Notify(stopCh, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)
+
+	return stopCh, func() {
+		close(stopCh)
+	}
 }

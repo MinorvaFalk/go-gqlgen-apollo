@@ -24,28 +24,27 @@ func (h *GraphqlHandler) Playground() http.HandlerFunc {
 }
 
 func (h *GraphqlHandler) Query() *handler.Server {
+	var srv *handler.Server
+
 	es := generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}})
 
-	// Default pre-configured Gqlgen Handler
-	// srv := handler.NewDefaultServer(es)
-
-	// Default Gqlgen Handler without any configuration
-	srv := handler.New(es)
-
-	// Graphql Handler configuration
-	// ...
-	srv.AddTransport(transport.Options{})
-	srv.AddTransport(transport.POST{})
-
-	srv.SetQueryCache(lru.New(1000))
-
-	srv.Use(extension.AutomaticPersistedQuery{
-		Cache: lru.New(100),
-	})
-
-	// enable introspection if enviroment is development
+	// Default pre-configured Gqlgen Handler for development
 	if os.Getenv("GO_ENV") == "dev" {
-		srv.Use(extension.Introspection{})
+		srv = handler.NewDefaultServer(es)
+	} else {
+		// Default Gqlgen Handler without any configuration for production
+		srv = handler.New(es)
+
+		// Graphql Handler configuration
+		// ...
+		srv.AddTransport(transport.Options{})
+		srv.AddTransport(transport.POST{})
+
+		srv.SetQueryCache(lru.New(1000))
+
+		srv.Use(extension.AutomaticPersistedQuery{
+			Cache: lru.New(100),
+		})
 	}
 
 	return srv

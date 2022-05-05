@@ -54,7 +54,7 @@ Steps :
 ```bash
 rover subgraph publish <GRAPH-REF> \
   --name monolith-go-api --schema ./go-api/graph/schema.graphqls \
-  --routing-url http://localhost:4001
+  --routing-url http://localhost:4001/query
 ```
 
 # Notes
