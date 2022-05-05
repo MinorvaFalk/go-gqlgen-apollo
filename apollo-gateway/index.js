@@ -9,6 +9,7 @@ const gateway = new ApolloGateway();
 
 const server = new ApolloServer({
     gateway,
+    introspection: process.env.ENV !== 'prod'
 });
 
 server.listen().then(({ url }) => {

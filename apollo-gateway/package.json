@@ -4,14 +4,21 @@
   "description": "Apollo Gateway for Go graphql API",
   "main": "index.js",
   "scripts": {
+    "start":"nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["Apollo Graphql", "Graphql"],
+  "keywords": [
+    "Apollo Graphql",
+    "Graphql"
+  ],
   "author": "MinorvaFalk",
   "license": "ISC",
   "dependencies": {
     "@apollo/gateway": "^2.0.2",
     "apollo-server": "^3.6.7",
     "dotenv": "^16.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.16"
   }
 }
