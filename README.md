@@ -43,7 +43,7 @@ Steps :
     >$ go run .
     >```
 
-    >Using **docker compose**:
+    >~~Using **docker compose**:~~ **[🚧 Under Construction]**
     >```bash
     >$ docker compose up --build
     >```
