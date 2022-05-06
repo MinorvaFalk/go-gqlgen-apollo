@@ -2,13 +2,20 @@
 require('dotenv').config()
 
 const { ApolloServer } = require('apollo-server');
-const { ApolloGateway } = require('@apollo/gateway');
+const { ApolloGateway, IntrospectAndCompose  } = require('@apollo/gateway');
 const { ApolloServerPluginLandingPageLocalDefault,
     ApolloServerPluginLandingPageProductionDefault
 } = require('apollo-server-core');
 
+const goAPI = process.env["GO_HOST"] || "localhost:4001";
 
-const gateway = new ApolloGateway();
+const gateway = new ApolloGateway({
+    supegraphSdl: new IntrospectAndCompose({
+        subgraphs: [
+            {name: 'go-api', url: `http://${goAPI}/query`}
+        ]
+    })
+});
 
 const server = new ApolloServer({
     gateway,

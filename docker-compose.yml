@@ -18,3 +18,4 @@ services:
     environment:
       # prod = production, dev = development
       - NODE_ENV=prod
+      - GO_HOST=go-api:4001
